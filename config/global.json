@@ -1,0 +1,11 @@
+{
+    "applications": {
+        "Shopping Week": {
+            "applicationId": "FnSgdgzLpSfUYUVFtp2drBsLyJF1Da3tfQnmk07S", 
+            "masterKey": "j3jQT7DK9dOJchBWqsXM8OVJiiGDXIszpcYMwWkW"
+        }, 
+        "_default": {
+            "link": "Shopping Week"
+        }
+    }
+}
