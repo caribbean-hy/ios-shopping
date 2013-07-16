@@ -1,5 +1,9 @@
 {
     "applications": {
+        "ParseApp": {
+            "applicationId": "AZCJTB1MxZniV5aoDzcbrivxaxw97pDXrG5JC0qj", 
+            "masterKey": "Mp8kZMhlQ8UwwRkVCRyMTuCPzua2LWyvxKAZzwMt"
+        }, 
         "Shopping Week": {
             "applicationId": "FnSgdgzLpSfUYUVFtp2drBsLyJF1Da3tfQnmk07S", 
             "masterKey": "j3jQT7DK9dOJchBWqsXM8OVJiiGDXIszpcYMwWkW"
@@ -7,5 +11,8 @@
         "_default": {
             "link": "Shopping Week"
         }
+    }, 
+    "global": {
+        "parseVersion": "1.2.8"
     }
 }

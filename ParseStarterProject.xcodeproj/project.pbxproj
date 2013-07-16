@@ -26,6 +26,9 @@
 		2FCDD6B014A573F500295AAC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FCDD6AF14A573F500295AAC /* QuartzCore.framework */; };
 		4998650515BF305000803E05 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4998650415BF305000803E05 /* StoreKit.framework */; };
 		743D7B6D157DA60100084B67 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 743D7B6C157DA60100084B67 /* CoreGraphics.framework */; };
+		8C3BC32917948F70006AE4A3 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C3BC32817948F70006AE4A3 /* TableViewController.m */; };
+		8C3BC34617949464006AE4A3 /* PFObjectStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C3BC34517949464006AE4A3 /* PFObjectStore.m */; };
+		8C3BC3481794B8CF006AE4A3 /* TableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8C3BC3471794B8CF006AE4A3 /* TableViewController.xib */; };
 		8CA4CC2D1790A0C4007D3D15 /* Course.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CA4CC2C1790A0C4007D3D15 /* Course.m */; };
 		8CA4CC2F1790A45F007D3D15 /* courses.json in Resources */ = {isa = PBXBuildFile; fileRef = 8CA4CC2E1790A45F007D3D15 /* courses.json */; };
 		C4C51B571613CE0800959FDC /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = C4C51B541613CE0800959FDC /* Default.png */; };
@@ -63,6 +66,11 @@
 		6372FF551613CC42002132AF /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		6372FF571613CC47002132AF /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		743D7B6C157DA60100084B67 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		8C3BC32717948F70006AE4A3 /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
+		8C3BC32817948F70006AE4A3 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
+		8C3BC34417949464006AE4A3 /* PFObjectStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFObjectStore.h; sourceTree = "<group>"; };
+		8C3BC34517949464006AE4A3 /* PFObjectStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFObjectStore.m; sourceTree = "<group>"; };
+		8C3BC3471794B8CF006AE4A3 /* TableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewController.xib; sourceTree = "<group>"; };
 		8CA4CC2B1790A0C4007D3D15 /* Course.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Course.h; sourceTree = "<group>"; };
 		8CA4CC2C1790A0C4007D3D15 /* Course.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Course.m; sourceTree = "<group>"; };
 		8CA4CC2E1790A45F007D3D15 /* courses.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = courses.json; sourceTree = "<group>"; };
@@ -146,6 +154,11 @@
 				09ABC08313A1D52D009C3FCF /* MainWindow.xib */,
 				09ABC08613A1D52E009C3FCF /* ParseStarterProjectViewController.h */,
 				09ABC08713A1D52E009C3FCF /* ParseStarterProjectViewController.m */,
+				8C3BC34417949464006AE4A3 /* PFObjectStore.h */,
+				8C3BC34517949464006AE4A3 /* PFObjectStore.m */,
+				8C3BC32717948F70006AE4A3 /* TableViewController.h */,
+				8C3BC32817948F70006AE4A3 /* TableViewController.m */,
+				8C3BC3471794B8CF006AE4A3 /* TableViewController.xib */,
 				09ABC08913A1D52E009C3FCF /* ParseStarterProjectViewController.xib */,
 				8CA4CC2B1790A0C4007D3D15 /* Course.h */,
 				8CA4CC2C1790A0C4007D3D15 /* Course.m */,
@@ -227,6 +240,7 @@
 				C4C51B581613CE0800959FDC /* Default-568h@2x.png in Resources */,
 				C4C51B591613CE0800959FDC /* Default@2x.png in Resources */,
 				8CA4CC2F1790A45F007D3D15 /* courses.json in Resources */,
+				8C3BC3481794B8CF006AE4A3 /* TableViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,6 +255,8 @@
 				09ABC08213A1D52D009C3FCF /* ParseStarterProjectAppDelegate.m in Sources */,
 				09ABC08813A1D52E009C3FCF /* ParseStarterProjectViewController.m in Sources */,
 				8CA4CC2D1790A0C4007D3D15 /* Course.m in Sources */,
+				8C3BC32917948F70006AE4A3 /* TableViewController.m in Sources */,
+				8C3BC34617949464006AE4A3 /* PFObjectStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

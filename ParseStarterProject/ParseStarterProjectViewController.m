@@ -1,6 +1,7 @@
 #import "ParseStarterProjectViewController.h"
 #import <Parse/Parse.h>
-
+#import "PFObjectStore.h"
+#import "TableViewController.h"
 
 @interface ParseStarterProjectViewController ()
 @property (unsafe_unretained, nonatomic) IBOutlet UITableView *tableView;
@@ -15,6 +16,10 @@
     NSString *timeString = [dateFormatter stringFromDate: time];
     NSLog(@"%@", timeString);
     
+    TableViewController *tvc = [[TableViewController alloc] init];
+    //[[self navigationController] pushViewController:tvc animated:YES];
+    [self presentViewController:tvc animated:YES completion:nil];
+    
 }
 
 
@@ -27,14 +32,50 @@
 
 
 #pragma mark - UIViewController
+//- (void)loadView
+//{
+//    TableViewController *tvc = [[TableViewController alloc] init];
+//    [[self tableView] setDelegate:tvc];
+//    [[self tableView] setDataSource:tvc];
+//
+//}
+
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    PFObject *testObject = [PFObject objectWithClassName:@"TestObject"];
-    [testObject setObject:@"bar" forKey:@"foo"];
-    [testObject save];
+//    PFObject *testObject = [PFObject objectWithClassName:@"TestObject"];
+//    [testObject setObject:@"bar" forKey:@"foo"];
+//    [testObject save];
+    
+    [PFCloud callFunctionInBackground:@"helloworld"
+                       withParameters:@{}
+                                block:^(NSString *result, NSError *error) {
+                                    if (!error) {
+                                        // result is @"Hello world!"
+                                    } else {
+                                        NSLog(@"HELP");
+                                    }
+                                }];
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Courses"];
+    [query whereKey:@"cat_num" equalTo:@"4949"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            // The find succeeded.
+            NSLog(@"Successfully retrieved %d scores.", objects.count);
+            // Do something with the found objects
+            for (PFObject *object in objects) {
+                NSLog(@"%@%@", [object objectForKey:@"field"], [object objectForKey:@"number"]);
+                [[PFObjectStore sharedStore] addCourse: object];
+            }
+            
+        } else {
+            // Log details of the failure
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+        }
+    }];
     
     [[self datePicker] addTarget:self action:@selector(showTime:) forControlEvents:UIControlEventValueChanged];
     

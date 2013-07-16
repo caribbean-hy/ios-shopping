@@ -1,3 +1,3 @@
-@interface ParseStarterProjectViewController : UIViewController
+@interface ParseStarterProjectViewController : UIViewController <UINavigationControllerDelegate>
 
 @end
