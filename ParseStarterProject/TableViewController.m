@@ -11,12 +11,30 @@
 #import <Parse/Parse.h>
 
 @interface TableViewController ()
-@property (unsafe_unretained, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 
+UITableView *tableView;
+
 @implementation TableViewController
 
+- (void) loadView
+{
+    CGRect mainViewFrame = CGRectMake(0.0, 255.0, [[UIScreen mainScreen] bounds].size.width, 200.0);
+    self.view = [[UIView alloc] initWithFrame: mainViewFrame];
+    
+    CGRect tableViewFrame = self.view.bounds;
+    tableView = [[UITableView alloc] initWithFrame: tableViewFrame style:UITableViewStylePlain];
+    [self.view addSubview:tableView];
+    
+    tableView.delegate = self;
+    tableView.dataSource = self;
+}
+
+- (UITableView *) getTable
+{
+    return tableView;
+}
 //- (id)initWithStyle:(UITableViewStyle)style
 //{
 //    //self = [super initWithStyle:style];
@@ -29,7 +47,7 @@
 
 - (id) init
 {
-    self = [super initWithStyle:UITableViewStyleGrouped];
+    self = [super init];
     if (self){
         NSLog(@"init");
     }
@@ -54,7 +72,6 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     NSLog(@"meow tableviewcontrollerhasloaded");
     NSLog(@"%d", [[[PFObjectStore sharedStore] qCourses] count]);
-    [[self tableView] reloadData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -66,7 +83,6 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[self tableView] reloadData];
 }
 
 #pragma mark - Table view data source
@@ -87,7 +103,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     NSLog(@"celling");
     // Configure the cell...
     
@@ -157,8 +173,7 @@
 }
 
 - (void)viewDidUnload {
-    [self setTableView:nil];
-    [self setTableView:nil];
+   
     [super viewDidUnload];
 }
 @end

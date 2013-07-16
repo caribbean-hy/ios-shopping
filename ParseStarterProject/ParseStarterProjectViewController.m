@@ -18,8 +18,8 @@
     
     TableViewController *tvc = [[TableViewController alloc] init];
     //[[self navigationController] pushViewController:tvc animated:YES];
-    [self presentViewController:tvc animated:YES completion:nil];
-    
+    [self addChildViewController:tvc];
+    [self.view addSubview:tvc.view];
 }
 
 
@@ -35,9 +35,7 @@
 //- (void)loadView
 //{
 //    TableViewController *tvc = [[TableViewController alloc] init];
-//    [[self tableView] setDelegate:tvc];
-//    [[self tableView] setDataSource:tvc];
-//
+//   
 //}
 
 
