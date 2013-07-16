@@ -15,6 +15,8 @@
 @end
 
 UITableView *tableView;
+static NSString *nibName = @"TableViewCell";
+
 
 @implementation TableViewController
 
@@ -67,6 +69,8 @@ UITableView *tableView;
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
+    UINib *nib = [UINib nibWithNibName: nibName bundle: nil];
+    [tableView registerNib:nib forCellReuseIdentifier: nibName];
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -103,7 +107,7 @@ UITableView *tableView;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:nibName];
     NSLog(@"celling");
     // Configure the cell...
     
