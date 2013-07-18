@@ -11,6 +11,9 @@
 
 @interface Course ()
 
+- (NSMutableArray *) matchString: (NSString *)string withExpression:(NSString *)exp withArray: (NSMutableArray *)array;
+
+
 @end
 
 
@@ -32,46 +35,25 @@
     [newCourse setBuilding: [object objectForKey:@"building"]];
     [newCourse setRoom: [object objectForKey:@"room"]];
     
-    NSError *error = NULL;
     
     [newCourse setDays:[[NSMutableArray alloc] init]];
     [newCourse setTimes: [[NSMutableArray alloc] init]];
     
+    [newCourse setDays: [newCourse matchString: [newCourse meetings] withExpression: @"[A-Za-z]+" withArray: [newCourse days]]];
     
-    
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[A-Z]" options:0 error:&error];
-    NSArray *matches = [regex matchesInString: [newCourse meetings] options:0 range:NSMakeRange(0, [[newCourse meetings] length])];
-    for (NSTextCheckingResult* match in matches)
-    {
-        NSString *s = [[newCourse meetings] substringWithRange:[match rangeAtIndex:0]];
-        NSLog(s);
-        [[newCourse days] addObject: s];
-        
-        
-    }
-    
-    regex = [NSRegularExpression regularExpressionWithPattern: @"[^ |A-Z]+" options:0 error: &error];
-    
-    matches = [regex matchesInString: [newCourse meetings] options:0 range:NSMakeRange(0, [[newCourse meetings] length])];
-    
-    for (NSTextCheckingResult* match in matches)
-    {
-        NSString *s = [[newCourse meetings] substringWithRange:[match rangeAtIndex:0]];
-        NSLog(s);
-        [[newCourse times] addObject: s];
-        
-        
-    }
-    
+    [newCourse setTimes: [newCourse matchString: [newCourse meetings] withExpression:@"[^ |A-Za-z]+" withArray:[newCourse times]]];
+
     return newCourse;
 
 }
 
-- (NSArray *) matchString: (NSString *)string withExpression:(NSString *)exp withArray: (NSMutableArray *)array
+- (NSMutableArray *) matchString: (NSString *)string withExpression:(NSString *)exp withArray: (NSMutableArray *)array
 {
-    NSRegularExpression regex = [NSRegularExpression regularExpressionWithPattern: exp options:0 error: &error];
+    NSError *error = nil;
     
-    matches = [regex matchesInString: string options:0 range:NSMakeRange(0, [string length])];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern: exp options:0 error: &error];
+    
+    NSArray *matches = [regex matchesInString: string options:0 range:NSMakeRange(0, [string length])];
     
     for (NSTextCheckingResult* match in matches)
     {
@@ -83,6 +65,18 @@
     }
     return array;
  
+}
+
+- (BOOL) courseIsOn:(NSDate *)datePicked
+{
+
+    
+    return YES;
+}
+
+- (void) dealloc
+{
+    NSLog(@"deallocing %@", [self title]);
 }
 
 @end

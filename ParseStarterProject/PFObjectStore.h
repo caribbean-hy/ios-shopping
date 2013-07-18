@@ -16,5 +16,5 @@
 
 - (void) removeCourse: (Course *) c;
 - (void) addCourse: (Course *) c;
-
+- (void) clearStore;
 @end

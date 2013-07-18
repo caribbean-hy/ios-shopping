@@ -78,7 +78,6 @@ static NSString *nibName = @"TableViewCell";
     [tableView registerNib:nib forCellReuseIdentifier: nibName];
     
     
-    NSLog(@"meow tableviewcontrollerhasloaded");
     NSLog(@"%d", [[[PFObjectStore sharedStore] qCourses] count]);
 }
 
@@ -104,7 +103,6 @@ static NSString *nibName = @"TableViewCell";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    NSLog(@"rowing");
     return [[[PFObjectStore sharedStore] qCourses] count];
 }
 
@@ -112,7 +110,6 @@ static NSString *nibName = @"TableViewCell";
 {
    
     TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:nibName];
-    NSLog(@"celling");
     // Configure the cell...
     
     if (!cell)

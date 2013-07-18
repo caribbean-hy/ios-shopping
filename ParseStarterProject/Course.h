@@ -27,5 +27,5 @@
 @property (nonatomic, strong) NSMutableArray *times;
 
 + (Course *) createNewCourse: (PFObject *) object;
-
+- (BOOL) courseIsOn: (NSDate *)time;
 @end

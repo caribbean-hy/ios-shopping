@@ -16,6 +16,61 @@
     NSString *timeString = [dateFormatter stringFromDate: time];
     NSLog(@"%@", timeString);
     
+    
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSDateComponents *comps = [cal components:NSWeekdayCalendarUnit fromDate:time];
+    int datePickerWeekday = [comps weekday];
+    NSString *searchWeekday = nil;
+    switch (datePickerWeekday) {
+        case 2:
+            searchWeekday = @"M";
+            break;
+        case 3:
+            searchWeekday = @"Tu";
+            break;
+        case 4:
+            searchWeekday = @"W";
+            break;
+        case 5:
+            searchWeekday = @"Th";
+            break;
+        case 6:
+            searchWeekday = @"F";
+            break;
+        case 7:
+            searchWeekday = @"Sa";
+            break;
+        case 0:
+            searchWeekday = @"Su";
+            break;
+    }
+    
+//    NSLog(searchWeekday);
+   
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Courses"];
+    
+    [query whereKey:@"meetings" containsString:searchWeekday];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            // The find succeeded.
+            NSLog(@"Successfully retrieved %d scores.", objects.count);
+            [[PFObjectStore sharedStore] clearStore];
+            // Do something with the found objects
+            for (PFObject *object in objects) {
+                Course *newCourse = [Course createNewCourse:object];
+                
+                
+                [[PFObjectStore sharedStore] addCourse: newCourse];
+            }
+            
+        } else {
+            // Log details of the failure
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+        }
+    }];
+ 
+    
     TableViewController *tvc = [[TableViewController alloc] init];
     //[[self navigationController] pushViewController:tvc animated:YES];
     [self addChildViewController:tvc];
@@ -51,6 +106,16 @@
                                         NSLog(@"HELP");
                                     }
                                 }];
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     PFQuery *query = [PFQuery queryWithClassName:@"Courses"];
     [query whereKey:@"cat_num" equalTo:@"4949"];

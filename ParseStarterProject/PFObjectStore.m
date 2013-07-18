@@ -44,4 +44,9 @@
     [_qCourses addObject:c];
 }
 
+- (void) clearStore
+{
+    [self init];
+}
+
 @end
