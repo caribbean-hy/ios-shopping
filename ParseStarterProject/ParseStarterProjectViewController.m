@@ -9,12 +9,16 @@
 @end
 
 @implementation ParseStarterProjectViewController
+
+
+
+
 - (IBAction)showClasses:(id)sender {
     NSDate *time = [[self datePicker] date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat: @"HH:mm"];
+    [dateFormatter setDateFormat: @"hh:mm"];
     NSString *timeString = [dateFormatter stringFromDate: time];
-    NSLog(@"%@", timeString);
+    //NSLog(@"%@", timeString);
     
     
     NSCalendar *cal = [NSCalendar currentCalendar];
@@ -44,9 +48,11 @@
             searchWeekday = @"Su";
             break;
     }
+    [[PFObjectStore sharedStore] setCurrentSelectedWeekday: searchWeekday];
     
-//    NSLog(searchWeekday);
-   
+    
+    //    NSLog(searchWeekday);
+    
     
     PFQuery *query = [PFQuery queryWithClassName:@"Courses"];
     
@@ -62,6 +68,7 @@
                 
                 
                 [[PFObjectStore sharedStore] addCourse: newCourse];
+                 NSDate *date = [newCourse getStartTime];
             }
             
         } else {
@@ -69,13 +76,17 @@
             NSLog(@"Error: %@ %@", error, [error userInfo]);
         }
     }];
- 
     
-    TableViewController *tvc = [[TableViewController alloc] init];
-    //[[self navigationController] pushViewController:tvc animated:YES];
-    [self addChildViewController:tvc];
-    [self.view addSubview:tvc.view];
+    
+    
+    
+    
+    
+    
+    
 }
+
+
 
 
 - (void)didReceiveMemoryWarning {
@@ -95,24 +106,27 @@
     
     //    PFObject *testObject = [PFObject objectWithClassName:@"TestObject"];
     //    [testObject setObject:@"bar" forKey:@"foo"];
-//    [testObject save];
+    //    [testObject save];
     
-    [PFCloud callFunctionInBackground:@"helloworld"
-                       withParameters:@{}
-                                block:^(NSString *result, NSError *error) {
-                                    if (!error) {
-                                        // result is @"Hello world!"
-                                    } else {
-                                        NSLog(@"HELP");
-                                    }
-                                }];
-   
+//    [PFCloud callFunctionInBackground:@"helloworld"
+//                       withParameters:@{}
+//                                block:^(NSString *result, NSError *error) {
+//                                    if (!error) {
+//                                        // result is @"Hello world!"
+//                                    } else {
+//                                        NSLog(@"HELP");
+//                                    }
+//                                }];
+//    
+//    
+    
+    TableViewController *tvc = [[TableViewController alloc] init];
+    //[[self navigationController] pushViewController:tvc animated:YES];
+    [self addChildViewController:tvc];
+    [self.view addSubview:tvc.view];
     
     
-    
-    
-    
-    
+    [[PFObjectStore sharedStore] setCurrentSelectedWeekday: @"M"];
     
     
     
@@ -129,6 +143,7 @@
                 
                 
                 [[PFObjectStore sharedStore] addCourse: newCourse];
+                NSDate *date = [newCourse getStartTime];
             }
             
         } else {
@@ -137,6 +152,8 @@
         }
     }];
     
+    
+    
     [[self datePicker] addTarget:self action:@selector(showTime:) forControlEvents:UIControlEventValueChanged];
     
 }
@@ -144,10 +161,7 @@
 - (void) showTime: (id) sender
 {
     NSDate *time = [[self datePicker] date];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat: @"HH:mm"];
-    NSString *timeString = [dateFormatter stringFromDate: time];
-    NSLog(@"%@", timeString);
+    [[PFObjectStore sharedStore] setCurrentSelectedDate: time];
 }
 
 

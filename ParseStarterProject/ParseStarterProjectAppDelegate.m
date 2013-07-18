@@ -37,7 +37,6 @@
     
     // Override point for customization after application launch.
     
-    TableViewController *tvc = [[TableViewController alloc] init];
     
     //UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tvc];
     //[[self window] setRootViewController:navController];

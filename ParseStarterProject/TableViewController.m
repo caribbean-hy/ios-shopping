@@ -39,15 +39,7 @@ static NSString *nibName = @"TableViewCell";
 {
     return tableView;
 }
-//- (id)initWithStyle:(UITableViewStyle)style
-//{
-//    //self = [super initWithStyle:style];
-//    self = [super init];
-//    if (self) {
-//        // Custom initialization
-//    }
-//    return self;
-//}
+
 
 - (id) init
 {
@@ -79,6 +71,13 @@ static NSString *nibName = @"TableViewCell";
     
     
     NSLog(@"%d", [[[PFObjectStore sharedStore] qCourses] count]);
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshTable:) name:@"DataUpdated" object:nil];
+}
+
+- (void) refreshTable: (NSNotification *) note
+{
+    [tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning

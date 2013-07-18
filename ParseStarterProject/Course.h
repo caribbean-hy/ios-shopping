@@ -28,4 +28,5 @@
 
 + (Course *) createNewCourse: (PFObject *) object;
 - (BOOL) courseIsOn: (NSDate *)time;
+- (NSDate *) getStartTime;
 @end

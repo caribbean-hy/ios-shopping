@@ -13,7 +13,8 @@
 
 + (PFObjectStore *) sharedStore;
 @property (nonatomic, strong, readonly) NSArray *qCourses;
-
+@property (nonatomic, strong) NSDate *currentSelectedDate;
+@property (nonatomic, strong) NSString *currentSelectedWeekday;
 - (void) removeCourse: (Course *) c;
 - (void) addCourse: (Course *) c;
 - (void) clearStore;

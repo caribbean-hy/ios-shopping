@@ -8,6 +8,7 @@
 
 #import "Course.h"
 #import <Parse/Parse.h>
+#import "PFObjectStore.h"
 
 @interface Course ()
 
@@ -69,9 +70,53 @@
 
 - (BOOL) courseIsOn:(NSDate *)datePicked
 {
-
+    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    
+    NSDateComponents *comps = [cal components: (NSDayCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit) fromDate: datePicked];
+    
+    NSInteger day = [comps day];
+    NSInteger year = [comps year];
+    NSInteger month = [comps month];
+    
+    NSDateComponents *classComps = [[NSDateComponents alloc] init];
+    [classComps setYear: year];
+    [classComps setMonth: month];
+    [classComps setDay: day];
+    [classComps setHour: [self getStartTime]];
+    
+    
     
     return YES;
+}
+
+- (NSDate *) getStartTime
+{
+    NSError *error = nil;
+    
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern: @"[^-]+" options:0 error: &error];
+   
+    NSString *toSearch = [[self times] objectAtIndex:[[self days] indexOfObject: [[PFObjectStore sharedStore] currentSelectedWeekday]]];
+    
+    NSArray *matches = [regex matchesInString: toSearch options:0 range:NSMakeRange(0, [toSearch length])];
+    
+        NSString *s = [toSearch substringWithRange:[[matches objectAtIndex: 0] rangeAtIndex:0]];
+        NSLog(s);
+        // Convert string to date object
+        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    
+    if ([s length] > 1)
+        [dateFormat setDateFormat:@"hh:mm"];
+    else
+        [dateFormat setDateFormat:@"hh"];
+    
+    NSDate *date = [dateFormat dateFromString:s];
+    
+    date = [date dateByAddingTimeInterval:[[NSTimeZone localTimeZone] secondsFromGMTForDate:date]]; // local date!
+    
+    NSLog(@"%@", date);
+    
+    return date;
+ 
 }
 
 - (void) dealloc
