@@ -34,12 +34,12 @@
     return sharedStore;
 }
 
-- (void) removeCourse:(PFObject *)c
+- (void) removeCourse:(Course *)c
 {
     [_qCourses removeObjectIdenticalTo: c];
 }
 
--(void) addCourse:(PFObject *)c
+-(void) addCourse:(Course *)c
 {
     [_qCourses addObject:c];
 }

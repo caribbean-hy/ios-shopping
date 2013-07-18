@@ -7,14 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-@class PFObject;
+@class Course;
 
 @interface PFObjectStore : NSObject
 
 + (PFObjectStore *) sharedStore;
 @property (nonatomic, strong, readonly) NSArray *qCourses;
 
-- (void) removeCourse: (PFObject *) c;
-- (void) addCourse: (PFObject *) c;
+- (void) removeCourse: (Course *) c;
+- (void) addCourse: (Course *) c;
 
 @end

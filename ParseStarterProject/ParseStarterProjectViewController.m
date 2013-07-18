@@ -2,9 +2,9 @@
 #import <Parse/Parse.h>
 #import "PFObjectStore.h"
 #import "TableViewController.h"
+#import "Course.h"
 
 @interface ParseStarterProjectViewController ()
-@property (unsafe_unretained, nonatomic) IBOutlet UITableView *tableView;
 @property (unsafe_unretained, nonatomic) IBOutlet UIDatePicker *datePicker;
 @end
 
@@ -60,8 +60,10 @@
             NSLog(@"Successfully retrieved %d scores.", objects.count);
             // Do something with the found objects
             for (PFObject *object in objects) {
-                NSLog(@"%@%@", [object objectForKey:@"field"], [object objectForKey:@"number"]);
-                [[PFObjectStore sharedStore] addCourse: object];
+                Course *newCourse = [Course createNewCourse:object];
+                
+                
+                [[PFObjectStore sharedStore] addCourse: newCourse];
             }
             
         } else {
@@ -91,7 +93,6 @@
 
 - (void)viewDidUnload {
     [self setDatePicker:nil];
-    [self setTableView:nil];
     [super viewDidUnload];
 }
 @end

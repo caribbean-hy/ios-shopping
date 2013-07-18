@@ -9,6 +9,8 @@
 #import "TableViewController.h"
 #import "PFObjectStore.h"
 #import <Parse/Parse.h>
+#import "TableViewCell.h"
+#import "Course.h"
 
 @interface TableViewController ()
 
@@ -69,11 +71,13 @@ static NSString *nibName = @"TableViewCell";
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
-    UINib *nib = [UINib nibWithNibName: nibName bundle: nil];
-    [tableView registerNib:nib forCellReuseIdentifier: nibName];
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    UINib *nib = [UINib nibWithNibName: nibName bundle: nil];
+    [tableView registerNib:nib forCellReuseIdentifier: nibName];
+    
+    
     NSLog(@"meow tableviewcontrollerhasloaded");
     NSLog(@"%d", [[[PFObjectStore sharedStore] qCourses] count]);
 }
@@ -106,21 +110,21 @@ static NSString *nibName = @"TableViewCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:nibName];
+   
+    TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:nibName];
     NSLog(@"celling");
     // Configure the cell...
     
     if (!cell)
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[TableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nibName];
     
     NSArray *courses = [[PFObjectStore sharedStore] qCourses];
     
-    PFObject *c = [courses objectAtIndex:[indexPath row]];
-    
-    [[cell textLabel] setText: [NSString stringWithFormat:@"%@%@", [c objectForKey:@"field"], [c objectForKey:@"number"]]];
-    
-    
+    Course *c = [courses objectAtIndex:[indexPath row]];
+    [cell setController:self];
+    [[cell titleLabel] setText: [NSString stringWithFormat:@"%@%@", [c field], [c number]]];
+    [[cell roomLabel] setText: [NSString stringWithFormat: @"%@%@",[c building], [c room]]];
+    [[cell timeLabel] setText: [c meetings]];
     return cell;
 }
 

@@ -12,5 +12,7 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *titleLabel;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *roomLabel;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *timeLabel;
+@property (unsafe_unretained, nonatomic) id controller;
+@property (unsafe_unretained, nonatomic) UITableView *owningTableView;
 
 @end
