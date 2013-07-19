@@ -11,15 +11,9 @@
 @implementation ParseStarterProjectViewController
 
 
-
-
-- (IBAction)showClasses:(id)sender {
+- (void) findWeekday
+{
     NSDate *time = [[self datePicker] date];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat: @"hh:mm"];
-    NSString *timeString = [dateFormatter stringFromDate: time];
-    //NSLog(@"%@", timeString);
-    
     
     NSCalendar *cal = [NSCalendar currentCalendar];
     NSDateComponents *comps = [cal components:NSWeekdayCalendarUnit fromDate:time];
@@ -49,10 +43,25 @@
             break;
     }
     [[PFObjectStore sharedStore] setCurrentSelectedWeekday: searchWeekday];
-    
-    
-    //    NSLog(searchWeekday);
-    
+
+}
+
+- (void) setTimeInterval: (id) sender
+{
+    NSDate *time = [[self datePicker] date];
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat: @"hh:mm"];
+    NSString *timeString = [dateFormat stringFromDate: time];
+    NSDate *pickedTime = [dateFormat dateFromString:timeString];
+    pickedTime = [pickedTime dateByAddingTimeInterval:[[NSTimeZone localTimeZone] secondsFromGMTForDate:pickedTime]]; // local date!
+
+    [[PFObjectStore sharedStore] setCurrentSelectedTime:pickedTime];
+}
+
+
+- (IBAction)showClasses:(id)sender {
+    [self findWeekday];
+    NSString *searchWeekday = [[PFObjectStore sharedStore] currentSelectedWeekday];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Courses"];
     
@@ -65,10 +74,11 @@
             // Do something with the found objects
             for (PFObject *object in objects) {
                 Course *newCourse = [Course createNewCourse:object];
+               
+                NSLog(@"%c", [newCourse courseIsOn]);
                 
-                
-                [[PFObjectStore sharedStore] addCourse: newCourse];
-                 NSDate *date = [newCourse getStartTime];
+                if ([newCourse courseIsOn])
+                    [[PFObjectStore sharedStore] addCourse: newCourse];
             }
             
         } else {
@@ -76,12 +86,6 @@
             NSLog(@"Error: %@ %@", error, [error userInfo]);
         }
     }];
-    
-    
-    
-    
-    
-    
     
     
 }
@@ -126,9 +130,8 @@
     [self.view addSubview:tvc.view];
     
     
-    [[PFObjectStore sharedStore] setCurrentSelectedWeekday: @"M"];
-    
-    
+    NSDate *time = [[self datePicker] date];
+    [[PFObjectStore sharedStore] setCurrentSelectedTime: time];
     
     
     PFQuery *query = [PFQuery queryWithClassName:@"Courses"];
@@ -143,7 +146,6 @@
                 
                 
                 [[PFObjectStore sharedStore] addCourse: newCourse];
-                NSDate *date = [newCourse getStartTime];
             }
             
         } else {
@@ -154,14 +156,8 @@
     
     
     
-    [[self datePicker] addTarget:self action:@selector(showTime:) forControlEvents:UIControlEventValueChanged];
+    [[self datePicker] addTarget:self action:@selector(setTimeInterval:) forControlEvents:UIControlEventValueChanged];
     
-}
-
-- (void) showTime: (id) sender
-{
-    NSDate *time = [[self datePicker] date];
-    [[PFObjectStore sharedStore] setCurrentSelectedDate: time];
 }
 
 

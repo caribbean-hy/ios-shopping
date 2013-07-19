@@ -43,9 +43,9 @@
     [newCourse setDays: [newCourse matchString: [newCourse meetings] withExpression: @"[A-Za-z]+" withArray: [newCourse days]]];
     
     [newCourse setTimes: [newCourse matchString: [newCourse meetings] withExpression:@"[^ |A-Za-z]+" withArray:[newCourse times]]];
-
+    
     return newCourse;
-
+    
 }
 
 - (NSMutableArray *) matchString: (NSString *)string withExpression:(NSString *)exp withArray: (NSMutableArray *)array
@@ -59,69 +59,104 @@
     for (NSTextCheckingResult* match in matches)
     {
         NSString *s = [string substringWithRange:[match rangeAtIndex:0]];
-        NSLog(s);
+//        NSLog(s);
         [array addObject: s];
         
         
     }
     return array;
- 
+    
 }
 
-- (BOOL) courseIsOn:(NSDate *)datePicked
+- (BOOL) courseIsOn
 {
-    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDate *selected = [[PFObjectStore sharedStore] currentSelectedTime];
+    NSDate *start = [self getStartTime];
+    NSDate *end = [self getEndTime];
     
-    NSDateComponents *comps = [cal components: (NSDayCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit) fromDate: datePicked];
+    NSLog(@"SELECTED TIME: %@", selected);
+   
+    NSLog(@"IS THE COURSE ON? %d", ([start compare:selected]!= NSOrderedDescending && [selected compare: end] != NSOrderedDescending));
     
-    NSInteger day = [comps day];
-    NSInteger year = [comps year];
-    NSInteger month = [comps month];
+    return ([start compare:selected]!=NSOrderedDescending && [selected compare: end] != NSOrderedDescending);
     
-    NSDateComponents *classComps = [[NSDateComponents alloc] init];
-    [classComps setYear: year];
-    [classComps setMonth: month];
-    [classComps setDay: day];
-    [classComps setHour: [self getStartTime]];
-    
-    
-    
-    return YES;
 }
 
-- (NSDate *) getStartTime
+- (NSDate *) getEndTime
 {
+    
     NSError *error = nil;
     
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern: @"[^-]+" options:0 error: &error];
-   
+    
     NSString *toSearch = [[self times] objectAtIndex:[[self days] indexOfObject: [[PFObjectStore sharedStore] currentSelectedWeekday]]];
     
     NSArray *matches = [regex matchesInString: toSearch options:0 range:NSMakeRange(0, [toSearch length])];
     
-        NSString *s = [toSearch substringWithRange:[[matches objectAtIndex: 0] rangeAtIndex:0]];
-        NSLog(s);
-        // Convert string to date object
-        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    NSString *s;
+    BOOL onlyOneTime = ([matches objectAtIndex: 0] == [matches lastObject]);
+    if (onlyOneTime){
+        s = [toSearch substringWithRange:[[matches objectAtIndex:0] range]];
+    } else {
+        s = [toSearch substringWithRange:[[matches objectAtIndex: 1] range]];
+    }
     
-    if ([s length] > 1)
-        [dateFormat setDateFormat:@"hh:mm"];
-    else
+//    NSLog(s);
+    // Convert string to date object
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    
+    if ([s rangeOfString:@":"].location == NSNotFound)
         [dateFormat setDateFormat:@"hh"];
+    else
+        [dateFormat setDateFormat:@"hh:mm"];
     
     NSDate *date = [dateFormat dateFromString:s];
     
     date = [date dateByAddingTimeInterval:[[NSTimeZone localTimeZone] secondsFromGMTForDate:date]]; // local date!
     
-    NSLog(@"%@", date);
+    if (onlyOneTime)
+        date = [date dateByAddingTimeInterval: (60 * 60)];
+    
+    NSLog(@"END TIME: %@", date);
     
     return date;
- 
+    
 }
 
-- (void) dealloc
+
+
+- (NSDate *) getStartTime
 {
-    NSLog(@"deallocing %@", [self title]);
+    
+    NSError *error = nil;
+    
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern: @"[^-]+" options:0 error: &error];
+    
+    NSString *toSearch = [[self times] objectAtIndex:[[self days] indexOfObject: [[PFObjectStore sharedStore] currentSelectedWeekday]]];
+    
+    NSTextCheckingResult *match = [regex firstMatchInString: toSearch options:0 range:NSMakeRange(0, [toSearch length])];
+    
+    NSString *s = [toSearch substringWithRange:[match range]];
+//    NSLog(s);
+    // Convert string to date object
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    
+    if ([s rangeOfString:@":"].location == NSNotFound)
+        [dateFormat setDateFormat:@"hh"];
+    else
+        [dateFormat setDateFormat:@"hh:mm"];
+    
+    NSDate *date = [dateFormat dateFromString:s];
+    
+    date = [date dateByAddingTimeInterval:[[NSTimeZone localTimeZone] secondsFromGMTForDate:date]]; // local date!
+    
+    NSLog(@"START TIME: %@", date);
+    
+    return date;
+    
 }
+
+
+
 
 @end

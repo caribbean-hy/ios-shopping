@@ -42,12 +42,12 @@
 -(void) addCourse:(Course *)c
 {
     [_qCourses addObject:c];
-       [[NSNotificationCenter defaultCenter] postNotificationName:@"DataUpdated" object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DataUpdated" object:self];
 }
 
 - (void) clearStore
 {
-    [self init];
+    id refreshed = [self init];
 }
 
 @end
