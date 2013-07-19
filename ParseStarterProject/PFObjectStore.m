@@ -20,6 +20,7 @@
     self = [super init];
     if (self) {
         _qCourses = [[NSMutableArray alloc] init];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DataUpdated" object:self];
     }
     return self;
 }
@@ -37,6 +38,8 @@
 - (void) removeCourse:(Course *)c
 {
     [_qCourses removeObjectIdenticalTo: c];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DataUpdated" object:self];
+
 }
 
 -(void) addCourse:(Course *)c
@@ -48,6 +51,8 @@
 - (void) clearStore
 {
     id refreshed = [self init];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DataUpdated" object:self];
+
 }
 
 @end
