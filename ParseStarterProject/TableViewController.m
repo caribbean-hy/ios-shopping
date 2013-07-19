@@ -120,7 +120,8 @@ static NSString *nibName = @"TableViewCell";
     [cell setController:self];
     [[cell titleLabel] setText: [NSString stringWithFormat:@"%@%@", [c field], [c number]]];
     [[cell roomLabel] setText: [NSString stringWithFormat: @"%@%@",[c building], [c room]]];
-    [[cell timeLabel] setText: [c meetings]];
+  //  [[cell timeLabel] setText: [c meetings]];
+    [[cell timeLabel] setText: [NSString stringWithFormat: @"%@ %@", [[PFObjectStore sharedStore] currentSelectedWeekday], [c timesForSelectedDay]]];
     return cell;
 }
 

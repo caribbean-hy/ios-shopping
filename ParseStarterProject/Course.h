@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <Parse/Parse.h>
 
-@interface Course : NSObject
+@interface Course : NSObject <NSCopying>
 
 @property (nonatomic) int cat_num;
 @property (nonatomic) NSString * term;
@@ -29,4 +29,6 @@
 + (Course *) createNewCourse: (PFObject *) object;
 - (BOOL) courseIsOn;
 - (NSDate *) getStartTime;
+- (NSString *) timesForSelectedDay;
+
 @end

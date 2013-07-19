@@ -87,7 +87,7 @@
             for (PFObject *object in objects) {
                 Course *newCourse = [Course createNewCourse:object];
                
-                NSLog(@"%c", [newCourse courseIsOn]);
+               NSLog(@"IS COURSE ON? %d", [newCourse courseIsOn]);
                 
                 if ([newCourse courseIsOn])
                     [[PFObjectStore sharedStore] addCourse: newCourse];

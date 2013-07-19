@@ -42,7 +42,7 @@
     
     [newCourse setDays: [newCourse matchString: [newCourse meetings] withExpression: @"[A-Za-z]+" withArray: [newCourse days]]];
     
-    [newCourse setTimes: [newCourse matchString: [newCourse meetings] withExpression:@"[^ |A-Za-z]+" withArray:[newCourse times]]];
+    [newCourse setTimes: [newCourse matchString: [newCourse meetings] withExpression:@"[0-9 ,-:]+" withArray:[newCourse times]]];
     
     return newCourse;
     
@@ -59,7 +59,8 @@
     for (NSTextCheckingResult* match in matches)
     {
         NSString *s = [string substringWithRange:[match rangeAtIndex:0]];
-//        NSLog(s);
+        s = [s stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSLog(s);
         [array addObject: s];
         
         
@@ -68,28 +69,67 @@
     
 }
 
-- (BOOL) courseIsOn
+- (NSString *) timesForSelectedDay
 {
-    NSDate *selected = [[PFObjectStore sharedStore] currentSelectedTime];
-    NSDate *start = [self getStartTime];
-    NSDate *end = [self getEndTime];
-    
-    NSLog(@"SELECTED TIME: %@", selected);
-   
-    NSLog(@"IS THE COURSE ON? %d", ([start compare:selected]!= NSOrderedDescending && [selected compare: end] != NSOrderedDescending));
-    
-    return ([start compare:selected]!=NSOrderedDescending && [selected compare: end] != NSOrderedDescending);
-    
+    return [[self times] objectAtIndex:[[self days] indexOfObject: [[PFObjectStore sharedStore] currentSelectedWeekday]]];
 }
 
-- (NSDate *) getEndTime
+- (BOOL) courseIsOn
+{
+    NSString *toSearch = [self timesForSelectedDay];
+    NSMutableArray *splitSessions = [self getMultipleSessions:toSearch];
+  //  NSLog(@"sessions split %d", [splitSessions count]);
+    for (int i = 0; i < [splitSessions count]; i++)
+    {
+     //   NSLog(@"%@%@", [[splitSessions objectAtIndex:i]title], [[splitSessions objectAtIndex:i] times]);
+    NSDate *selected = [[PFObjectStore sharedStore] currentSelectedTime];
+    NSDate *start = [[splitSessions objectAtIndex:i] getStartTime:toSearch];
+    NSDate *end = [[splitSessions objectAtIndex:i] getEndTime:toSearch];
+    
+    NSLog(@"SELECTED TIME: %@", selected);
+  
+        
+    if ([start compare:selected]!= NSOrderedDescending && [selected compare: end] != NSOrderedDescending)
+        return YES;
+    
+    }
+    return NO;
+}
+
+- (NSMutableArray *) getMultipleSessions: (NSString *)toSearch
+{
+       
+    NSMutableArray *sessions = [[NSMutableArray alloc] init];
+    NSError *error = nil;
+//    NSLog(@"\n\nPRE REGEX -- %@, %@, %@\n\n", [self field], [self number], [self times]);
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[^,]+" options:0 error:&error];
+    NSArray *matches = [regex matchesInString:toSearch options: 0 range: NSMakeRange(0, [toSearch length])];
+    BOOL onlyOneTime = ([matches objectAtIndex: 0] == [matches lastObject]);
+    if (onlyOneTime) {
+        [sessions addObject:self];
+//        NSLog(@"/n/nI ONLY HAVE 1 TIME -- %@, %@, %@/n/n", [self field], [self number], [self times]);
+    } else {
+        NSString *s = [toSearch substringWithRange:[[matches objectAtIndex:0] range]];
+        [self setTimeForSelectedDay:s];
+        [sessions addObject:self];
+        for (int i = 1; i < [matches count] ; i++)
+        {
+            s = [toSearch substringWithRange:[[matches objectAtIndex:i] range]];
+            Course *copyCourse = [self mutableCopy];
+            [copyCourse setTimeForSelectedDay:s];
+            [sessions addObject:copyCourse];
+        }
+    }
+    return sessions;
+}
+
+
+- (NSDate *) getEndTime: (NSString *) toSearch
 {
     
     NSError *error = nil;
     
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern: @"[^-]+" options:0 error: &error];
-    
-    NSString *toSearch = [[self times] objectAtIndex:[[self days] indexOfObject: [[PFObjectStore sharedStore] currentSelectedWeekday]]];
     
     NSArray *matches = [regex matchesInString: toSearch options:0 range:NSMakeRange(0, [toSearch length])];
     
@@ -125,14 +165,13 @@
 
 
 
-- (NSDate *) getStartTime
+- (NSDate *) getStartTime: (NSString *)toSearch
 {
     
     NSError *error = nil;
     
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern: @"[^-]+" options:0 error: &error];
     
-    NSString *toSearch = [[self times] objectAtIndex:[[self days] indexOfObject: [[PFObjectStore sharedStore] currentSelectedWeekday]]];
     
     NSTextCheckingResult *match = [regex firstMatchInString: toSearch options:0 range:NSMakeRange(0, [toSearch length])];
     
@@ -149,14 +188,41 @@
     NSDate *date = [dateFormat dateFromString:s];
     
     date = [date dateByAddingTimeInterval:[[NSTimeZone localTimeZone] secondsFromGMTForDate:date]]; // local date!
-    
+  
     NSLog(@"START TIME: %@", date);
     
     return date;
     
 }
 
+- (void) setTimeForSelectedDay: (NSString*) newTime
+{
+    [[self times] replaceObjectAtIndex: [[self days] indexOfObject: [[PFObjectStore sharedStore] currentSelectedWeekday]] withObject:newTime];
+}
 
 
+- (id) mutableCopyWithZone:(NSZone *)zone
+{
+    Course *copy = [[[self class] allocWithZone:zone] init];
+    
+    if (copy)
+    {
+        [copy setCat_num: [self cat_num]];
+        [copy setTerm: [self term]];
+        [copy setField: [self field]];
+        [copy setNumber: [self number]];
+        [copy setTitle: [self title]];
+        [copy setFaculty: [self faculty]];
+        [copy setDescription: [self description]];
+        [copy setPrerequisites: [self prerequisites]];
+        [copy setMeetings: [self meetings]];
+        [copy setBuilding: [self building]];
+        [copy setRoom: [self room]];
+        [copy setDays: [self days]];
+        [copy setTimes: [[self times] mutableCopyWithZone:zone]];
+        
+    }
+    return copy;
+}
 
 @end
